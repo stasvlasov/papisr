@@ -78,7 +78,8 @@ tabulate_papis_records <- function(papis_records, ...) {
                      }
                  }) |>
                 `names<-`(col_names) |>
-                as.data.frame(stringsAsFactors = FALSE)
+                as.data.frame(stringsAsFactors = FALSE
+                            , check.names = FALSE)
         })
     do.call(rbind, papis_table)
 }
