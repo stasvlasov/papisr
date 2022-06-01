@@ -4,17 +4,15 @@
 \alias{tabulate_papis_records}
 \title{Tablulate papis records}
 \usage{
-tabulate_papis_records(papis_records, ..., use_path_as_row_names = FALSE)
+tabulate_papis_records(papis_records, ...)
 }
 \arguments{
 \item{papis_records}{List of papis records as returned by \code{collect_papis_records()}}
 
 \item{...}{Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - \code{path} and \code{info} (see \code{collect_papis_records()} for details)}
-
-\item{use_path_as_row_names}{Use 'path' or papis record as a row's name}
 }
 \value{
-Matrix
+Data frame. If some of the column values have length > 1 then the table will be filled with these values.
 }
 \description{
 Tablulate papis records

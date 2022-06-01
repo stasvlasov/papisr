@@ -26,4 +26,4 @@ References: Alejandro Gallo, Nicolò Balzarotti, Michael Plews, Alex Fikl,
     dbruggner, hayk, Henning Timm, … prataffel. (2022). papis/papis:
     VERSION 0.12 (v0.12). Zenodo. https://doi.org/10.5281/zenodo.6573964
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0

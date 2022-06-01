@@ -372,14 +372,12 @@ vignettes/*.pdf
   ##' 
   ##' @param papis_records List of papis records as returned by `collect_papis_records()`
   ##' @param ... Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - `path` and `info` (see `collect_papis_records()` for details)
-  ##' @param use_path_as_row_names Use 'path' or papis record as a row's name 
-  ##' @return Matrix
+  ##' @return Data frame. If some of the column values have length > 1 then the table will be filled with these values.
   ##' 
   ##' @md 
   ##' @export 
   tabulate_papis_records <- function(papis_records
-                                   , ...
-                                   , use_path_as_row_names = FALSE) {
+                                   , ...) {
       fun_call <- sys.call()
       col_names <- ...names()
       papis_table <- 
@@ -390,23 +388,16 @@ vignettes/*.pdf
                        col_val <- 
                            fun_call[[col_name]] |>
                            eval(papis_record)
-                       col_val_len <- length(col_val)
-                       if(col_val_len == 1) {
-                           return(col_val)
-                       } else if(col_val_len == 0) {
+                       if(length(col_val) == 0 ) {
                            return(NA)
                        } else {
-                           stop("tabulate_papis_records -- the calculated values should have length of 1 or 0 (NA). Here col_val = '", paste(col_val, collapse = ", "), "' has length of ", col_val_len)
+                           return(col_val)
                        }
-                   })
+                   }) |>
+                  `names<-`(col_names) |>
+                  as.data.frame(stringsAsFactors = FALSE)
           })
-      if(use_path_as_row_names) {
-          row_names <- sapply(papis_records, `[[`, "path")
-      } else {
-          row_names <- NULL
-      }
-      do.call(rbind, papis_table) |>
-          `dimnames<-`(list(row_names, col_names))
+      do.call(rbind, papis_table)
   }
 
 #+END_SRC
@@ -417,11 +408,23 @@ vignettes/*.pdf
                collect_papis_records() |>
                tabulate_papis_records(year = info$year
                                     , url = info$url
-                                    , tag = length(info$tags)
-                                      ## remove paths as in test environment it is different
-                                    , use_path_as_row_names = FALSE)
-  , structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", 
-      NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(NULL, 
-      c("year", "url", "tag"))))
+                                    , tag = length(info$tags))
+  , structure(list(year = c(2022L, 1985L, 2222L, 2000L), url = c("example.com", 
+  "uvt.nl", NA, NA), tag = c(2L, 2L, 1L, 1L)), row.names = c(NA, 
+  -4L), class = "data.frame"))
+
+
+  ## test filling the columns
+  expect_equal(system.file("testdata", "papis", package = "papisr") |>
+               collect_papis_records() |>
+               tabulate_papis_records(year = info$year
+                                    , url = info$url
+                                    , tag = info$tags)
+  , structure(list(year = c(2022L, 2022L, 1985L, 1985L, 2222L, 2000L
+  ), url = c("example.com", "example.com", "uvt.nl", "uvt.nl", 
+  NA, NA), tag = c("data", "research", "research", "phd", "data", 
+                   "classics")), row.names = c(NA, -6L), class = "data.frame"))
+
+
 #+END_SRC
 

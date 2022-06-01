@@ -2,9 +2,19 @@ expect_equal(system.file("testdata", "papis", package = "papisr") |>
              collect_papis_records() |>
              tabulate_papis_records(year = info$year
                                   , url = info$url
-                                  , tag = length(info$tags)
-                                    ## remove paths as in test environment it is different
-                                  , use_path_as_row_names = FALSE)
-, structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", 
-    NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(NULL, 
-    c("year", "url", "tag"))))
+                                  , tag = length(info$tags))
+, structure(list(year = c(2022L, 1985L, 2222L, 2000L), url = c("example.com", 
+"uvt.nl", NA, NA), tag = c(2L, 2L, 1L, 1L)), row.names = c(NA, 
+-4L), class = "data.frame"))
+
+
+## test filling the columns
+expect_equal(system.file("testdata", "papis", package = "papisr") |>
+             collect_papis_records() |>
+             tabulate_papis_records(year = info$year
+                                  , url = info$url
+                                  , tag = info$tags)
+, structure(list(year = c(2022L, 2022L, 1985L, 1985L, 2222L, 2000L
+), url = c("example.com", "example.com", "uvt.nl", "uvt.nl", 
+NA, NA), tag = c("data", "research", "research", "phd", "data", 
+                 "classics")), row.names = c(NA, -6L), class = "data.frame"))
