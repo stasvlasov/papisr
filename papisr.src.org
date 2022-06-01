@@ -229,6 +229,7 @@ vignettes/*.pdf
      , URL = "https://stasvlasov.github.io/papisr/"
      , BugReports = "https://github.com/stasvlasov/papisr/issues"
      , Suggests = paste(suggest_packages$names, collapse = ", ")
+     , References = 'Alejandro Gallo, Nicolò Balzarotti, Michael Plews, Alex Fikl, Jackson Woodruff, Matthieu Coudron, Alexander Von Moll, gouderm, Sébastien M. Popoff, Henrik Grimler, JP-Ellis, Katrin Leinweber, Manuel Haussmann, Andrew Ramsey, Andrey Akinshin, CosmosAtlas, dbruggner, hayk, Henning Timm, … prataffel. (2022). papis/papis: VERSION 0.12 (v0.12). Zenodo. https://doi.org/10.5281/zenodo.6573964'
      , Depends = paste(
            paste0(dependencies$packages, " (>= ", dependencies$ensure_version, ")")
          , collapse = ", ")) |>
@@ -271,8 +272,8 @@ vignettes/*.pdf
   devtools::install(".")
 #+END_SRC
 
-* functions
-** papis test records
+
+* papis test records
 
 #+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes
   tags:
@@ -302,12 +303,12 @@ vignettes/*.pdf
 
 
 
-** papisr functions
+* papisr functions
 :PROPERTIES:
 :ID:       org:1nneg0902hj0
 :END:
 
-*** collect_papis_records
+** collect_papis_records
 #+name: 
 #+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
   ##' Collects papis records
@@ -359,7 +360,7 @@ vignettes/*.pdf
   , list(list(path = "inst/testdata/papis/a", info = list(tags = c("data", "research"), url = "example.com", year = 2022L)), list(path = "inst/testdata/papis/c", info = list(tags = "data", year = 2222L))))
 #+END_SRC
 
-*** tabulate_papis_records
+** tabulate_papis_records
 
 #+name: 
 #+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
