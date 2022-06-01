@@ -45,6 +45,15 @@ collect_papis_records <- function(dir, filter_info) {
     }
 }
 
+##' Tablulate papis records
+##' 
+##' @param papis_records List of papis records as returned by `collect_papis_records()`
+##' @param ... Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - `path` and `info` (see `collect_papis_records()` for details)
+##' @param use_path_as_row_names Use 'path' or papis record as a row's name 
+##' @return Matrix
+##' 
+##' @md 
+##' @export 
 tabulate_papis_records <- function(papis_records
                                  , ...
                                  , use_path_as_row_names = FALSE) {
@@ -74,5 +83,5 @@ tabulate_papis_records <- function(papis_records
         row_names <- NULL
     }
     do.call(rbind, papis_table) |>
-    `dimnames<-`(list(row_names, col_names))
+        `dimnames<-`(list(row_names, col_names))
 }
