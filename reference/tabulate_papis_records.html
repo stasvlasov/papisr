@@ -50,7 +50,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tabulate_papis_records</span><span class="op">(</span><span class="va">papis_records</span>, <span class="va">...</span>, use_path_as_row_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tabulate_papis_records</span><span class="op">(</span><span class="va">papis_records</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -59,12 +59,10 @@
 <dd><p>List of papis records as returned by <code><a href="collect_papis_records.html">collect_papis_records()</a></code></p></dd>
 <dt>...</dt>
 <dd><p>Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - <code>path</code> and <code>info</code> (see <code><a href="collect_papis_records.html">collect_papis_records()</a></code> for details)</p></dd>
-<dt>use_path_as_row_names</dt>
-<dd><p>Use 'path' or papis record as a row's name</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Matrix</p>
+    <p>Data frame. If some of the column values have length &gt; 1 then the table will be filled with these values.</p>
     </div>
 
   </div>
