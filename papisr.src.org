@@ -356,11 +356,11 @@ vignettes/*.pdf
 #+BEGIN_SRC R :tangle inst/tinytest/test_collect_papis_records.r
   expect_equal(
     system.file("testdata", "papis", package = "papisr") |>
-    collect_papis_records("data" %in% info$tags)
-  , list(list(path = "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/papisr/testdata/papis/a", 
-      info = list(tags = c("data", "research"), url = "example.com", 
-          year = 2022L)), list(path = "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/papisr/testdata/papis/c", 
-      info = list(tags = "data", year = 2222L))))
+    collect_papis_records("data" %in% info$tags) |>
+    lapply(`[[`, "info")
+    ## remove paths as in test environment it is different
+  , list(list(tags = c("data", "research"), url = "example.com", 
+      year = 2022L), list(tags = "data", year = 2222L)))
 #+END_SRC
 
 ** tabulate_papis_records
@@ -416,6 +416,7 @@ vignettes/*.pdf
                tabulate_papis_records(year = info$year
                                     , url = info$url
                                     , tag = length(info$tags)
+                                      ## remove paths as in test environment it is different
                                     , use_path_as_row_names = FALSE)
   , structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", 
       NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(NULL, 
