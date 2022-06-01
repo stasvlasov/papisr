@@ -310,7 +310,7 @@ vignettes/*.pdf
 
 ** collect_papis_records
 #+name: 
-#+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
+#+BEGIN_SRC R :tangle R/papisr.r :mkdirp yes
   ##' Collects papis records
   ##'
   ##' The collection is done by (1) looking for all subdirectories with info.yml file that defines papis record, (2) filtering those records and (3) returning lists of 'path' (root dir of papis record) and 'info' (content of info.yml) for each record
@@ -362,8 +362,7 @@ vignettes/*.pdf
 
 ** tabulate_papis_records
 
-#+name: 
-#+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
+#+BEGIN_SRC R :tangle R/papisr.r :mkdirp yes
   ##' Tablulate papis records
   ##' 
   ##' @param papis_records List of papis records as returned by `collect_papis_records()`
@@ -409,7 +408,7 @@ vignettes/*.pdf
 
 
 #+BEGIN_SRC R :tangle inst/tinytest/test_tabulate_papis_records.r
-  expect_equal(system.file("testdata", "papis", package = "papis") |>
+  expect_equal(system.file("testdata", "papis", package = "papisr") |>
                collect_papis_records() |>
                tabulate_papis_records(year = info$year
                                     , url = info$url

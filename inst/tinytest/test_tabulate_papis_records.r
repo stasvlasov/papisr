@@ -1,4 +1,4 @@
-expect_equal(system.file("testdata", "papis", package = "papis") |>
+expect_equal(system.file("testdata", "papis", package = "papisr") |>
              collect_papis_records() |>
              tabulate_papis_records(year = info$year
                                   , url = info$url
