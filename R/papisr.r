@@ -54,8 +54,7 @@ collect_papis_records <- function(dir, filter_info) {
 ##' 
 ##' @md 
 ##' @export 
-tabulate_papis_records <- function(papis_records
-                                 , ...) {
+tabulate_papis_records <- function(papis_records, ...) {
     fun_call <- sys.call()
     col_names <- ...names()
     papis_table <- 
@@ -66,8 +65,14 @@ tabulate_papis_records <- function(papis_records
                      col_val <- 
                          fun_call[[col_name]] |>
                          eval(papis_record)
-                     if(length(col_val) == 0 ) {
+                     if(length(col_val) == 0) {
                          return(NA)
+                     } else if(is.list(col_val) || length(col_val) > 1) {
+                         col_val <- 
+                             col_val |>
+                             lapply(\(col_val_el) if(length(col_val_el) == 0) NA else col_val_el) |>
+                             unlist()
+                         return(col_val)
                      } else {
                          return(col_val)
                      }
