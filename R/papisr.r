@@ -1,3 +1,11 @@
+#' @details
+#' Bundle of convenience functions for papis workflows in R.
+#' Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'.
+#' 
+#' This package does not require actually require `papis` to be installed in order for its functions to work.
+#' @keywords internal
+"_PACKAGE"
+
 ##' Collects papis records
 ##'
 ##' The collection is done by (1) looking for all subdirectories with info.yml file that defines papis record, (2) filtering those records and (3) returning lists of 'path' (root dir of papis record) and 'info' (content of info.yml) for each record
@@ -39,52 +47,34 @@ collect_papis_records <- function(dir, filter_info) {
     }
 }
 
-
-
-
-
-## tests
-collect_papis_records(
-    dir = "~/org/data"
-  , "name_standardization" %in% info$tags)
-
-collect_papis_records(
-    dir = "~/org/data"
-  , info$metacodes$url == "https://www.researchoninnovation.org/epodata/")[[1]]$path
-
-
-collect_papis_records(
-    dir = system.file("testdata", "papis", package = "papisr")
-  , info$metacodes$url == "https://www.researchoninnovation.org/epodata/")[[1]]$path
-
-collect_papis_records(
-    dir = "inst/testdata/papis"
-  , "data" %in% info$tags)
-
-
-
-
-
-
-tabulate_papis_records <- function(papis_records, ...) {
-    message("HI")
-    env <- environment()
-    papis_records |>
-        sapply(\(papis_record) {
-            col_values <-
-                sapply(1:...length(), \(n) {
-                    parse(paste0("..", n)) |>
-                        substitute(env) |>
-                        deparse()
-                })
-                        ## eval(envir = papis_record)
-            ## if(length(col_val) > 1) stop("tabulate_papis_records -- col value should be length of 1")
-            return(col_values)
-                })
-    ## names(col_values) <- names(col_formulas)
+tabulate_papis_records <- function(papis_records
+                                 , ...
+                                 , use_path_as_row_names = FALSE) {
+    fun_call <- sys.call()
+    col_names <- ...names()
+    papis_table <- 
+        papis_records |>
+        lapply(\(papis_record) {
+            lapply(col_names
+                 , \(col_name) {
+                     col_val <- 
+                         fun_call[[col_name]] |>
+                         eval(papis_record)
+                     col_val_len <- length(col_val)
+                     if(col_val_len == 1) {
+                         return(col_val)
+                     } else if(col_val_len == 0) {
+                         return(NA)
+                     } else {
+                         stop("tabulate_papis_records -- the calculated values should have length of 1 or 0 (NA). Here col_val = '", paste(col_val, collapse = ", "), "' has length of ", col_val_len)
+                     }
+                 })
+        })
+    if(use_path_as_row_names) {
+        row_names <- sapply(papis_records, `[[`, "path")
+    } else {
+        row_names <- NULL
+    }
+    do.call(rbind, papis_table) |>
+    `dimnames<-`(list(row_names, col_names))
 }
-
-
-collect_papis_records("inst/testdata/papis") |>
-    tabulate_papis_records(year = info$year
-                         , url = info$url)

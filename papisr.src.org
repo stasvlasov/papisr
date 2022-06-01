@@ -1,8 +1,261 @@
-* papisr functions
+* frontpage
+:PROPERTIES:
+:export_file_name: README.md
+:export_options: toc:nil
+:export_options+: author:nil
+:export_options+: title:nil
+:END:
+#+name: md-badges
+#+begin_export markdown
+[![R-CMD-check](https://github.com/stasvlasov/get_dots/workflows/R-CMD-check/badge.svg)](https://github.com/stasvlasov/get_dots/actions)
+[![codecov](https://codecov.io/gh/stasvlasov/dots/branch/master/graph/badge.svg?token=ACDBEL2JY5)](https://codecov.io/gh/stasvlasov/dots)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stasvlasov/dots)
+#+end_export
+
+#+name: package-title
+#+begin_src markdown :exports none
+  Bundle of convenience functions for papis workflows in R.
+#+end_src
+
+#+name: package-description
+#+begin_src markdown :exports none
+  Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'.
+
+  This package does not require actually require `papis` to be installed in order for its functions to work.
+#+end_src
+
+#+name: readme-header
+#+begin_src emacs-lisp :noweb yes :exports results :wrap EXPORT markdown :results value replace
+  "<<package-title>>
+  
+  <<package-description>>"
+#+end_src
+
+#+RESULTS: readme-header
+#+begin_EXPORT markdown
+Bundle of convenience functions for papis workflows in R.
+
+Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'.
+
+This package does not require actually require `papis` to be installed in order for its functions to work.
+#+end_EXPORT
+
+* deploy
+#+name: deploy
+#+begin_src emacs-lisp
+  (save-excursion
+    (let ((calls '(
+                    "readme-header"
+                    "tangle-readme"
+                    "description-and-license"
+                    "roxygenize"
+                    ))
+           ;; turn off babel prompts
+           org-confirm-babel-evaluate)
+      ;; tangle all blocks
+      (org-babel-tangle)
+      (mapcar
+       (lambda (name)
+         (let (org-confirm-babel-evaluate)
+           (save-excursion
+             (org-babel-goto-named-src-block name)
+             (call-interactively 'org-babel-execute-maybe))))
+       calls)))
+#+end_src
+
+** Reset working directory
+#+name: reset-working-directory
+#+BEGIN_SRC R :tangle no
+  ## Remove tangled and generated files
+  ## --------------------------------------------------------------------------------
+  files_to_remove <- c(
+      "DESCRIPTION"
+    , "NAMESPACE"
+    , "LICENSE.md"
+    , "README.md"
+  )
+
+  dirs_to_remove <-c(
+      "man"
+    , "inst"
+    , "data"
+    , "R"
+  )
+
+  ## remove files in dirs recursively
+  sapply(dirs_to_remove
+       , function(dir) {
+           file.remove(list.files(dir , recursive = TRUE, full.names = TRUE))
+       })
+
+  ## remove files and empty dirs
+  sapply(c(files_to_remove, dirs_to_remove)
+       , \(file) if(file.exists(file)) file.remove(file))
+#+END_SRC
+
+** tinytest
+#+name: setup-tinytest
+#+BEGIN_SRC R
+  tinytest::setup_tinytest(".")
+#+END_SRC
+
+** github workflows and badges
+https://github.com/r-lib/actions/blob/v1/examples/README.md
+#+name: setup-github-actions
+#+BEGIN_SRC R
+  usethis::use_github_action("check-release")
+  usethis::use_github_action("test-coverage")
+  usethis::use_github_action("pkgdown")
+  usethis::use_github_actions_badge(name = "R-CMD-check")
+#+END_SRC
+
+** .gitignore
+#+name: tangle-gitignore
+#+BEGIN_SRC Gitignore :tangle ".gitignore"
+*.project.org
+.DS_Store
+#+END_SRC
+
+** .Rbuildignore
+#+name: tangle-rbuildignore
+#+BEGIN_SRC Fundamental :tangle ".Rbuildignore"
+^LICENSE\.md$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+#+END_SRC
+
+
+
+** README.md
+#+name: tangle-readme
+#+begin_src emacs-lisp
+  (require 'org-goto)
+  (save-excursion
+    (org-goto--local-search-headings "frontpage" nil t)
+    ;; (org-pandoc-export-to-markdown nil 'subtreep)
+    (org-md-export-to-markdown nil 'subtreep))
+#+end_src
+
+** Description and License
+:PROPERTIES:
+:ID:       org:qaljap21baj0
+:END:
+
+#+name: suggest-packages
+| names          | link                                                                |
+|----------------+---------------------------------------------------------------------|
+| tinytest       | https://github.com/markvanderloo/tinytest/blob/master/pkg/README.md |
+| checkmate      | https://mllg.github.io/checkmate/                                   |
+
+
+#+name: dependencies
+| packages | current_version | ensure_version | link                                              |
+|----------+-----------------+----------------+---------------------------------------------------|
+| R        | nil             |            4.0 |                                                   |
+| yaml     | 2.3.5           |          2.3.0 | [[https://github.com/vubiostat/r-yaml][R package for converting objects to and from YAML]] |
+
+
+#+name: get-package-vesion
+#+header: :var pkg = "base"
+#+BEGIN_SRC R :results value replace
+  packageVersion(pkg)
+#+END_SRC
+
+
+#+name: description-and-license
+#+header: :var suggest_packages = suggest-packages
+#+header: :var dependencies = dependencies
+#+BEGIN_SRC R :noweb yes
+  suppressWarnings(file.remove("DESCRIPTION"))
+  usethis::use_description(fields = list(
+                               Title  = "<<package-title>>"
+                             , Description = "<<package-description>>"
+                             , Date = Sys.Date()
+                             , "Authors@R" = 'as.person("Stanislav Vlasov <s.vlasov@uvt.nl> [aut, cre]")'
+                             , Version = "0.0.0.9000"
+                             , URL = "https://stasvlasov.github.io/papisr/"
+                             , BugReports = "https://github.com/stasvlasov/papisr/issues"
+                             , Suggests = paste(suggest_packages$names, collapse = ", ")
+                             , Depends = paste(
+                                   paste0(dependencies$packages, " (>= ", dependencies$ensure_version, ")")
+                                 , collapse = ", ")))
+
+  suppressWarnings(file.remove("LICENSE", "LICENSE.md"))
+  ## usethis::use_mit_license()
+  ## usethis::use_lgpl_license()
+  usethis::use_apache_license()  
+#+END_SRC
+
+** Documentation
+:PROPERTIES:
+:ID:       org:1lkit051baj0
+:END:
+#+BEGIN_SRC R :tangle R/papisr.r :noweb yes
+  #' @details
+  #' <<package-title>>
+  #' <<package-description>>
+  #' @keywords internal
+  "_PACKAGE"
+#+END_SRC
+
+#+name: roxygenize
+#+BEGIN_SRC R
+  ## Update name spaces and documentation for functions
+  roxygen2::roxygenize()
+#+END_SRC
+
+** Install package
+#+name: install-package
+#+BEGIN_SRC R :tangle no
+  ## Unload and uninstall package
+  ## --------------------------------------------------------------------------------
+  detach(package:papisr, unload = TRUE)
+  remove.packages("papisr")
+  
+  ## Install package
+  ## --------------------------------------------------------------------------------
+  devtools::install(".")
+#+END_SRC
+
+* functions
+** papis test records
+
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes
+  tags:
+    - data
+    - research
+  url: example.com
+  year: 2022
+#+END_SRC
+
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/b/info.yml" :mkdirp yes
+  tags:
+    - research
+    - phd
+  url: uvt.nl
+  year: 1985
+#+END_SRC
+
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/c/INFO.YML" :mkdirp yes
+  tags: data
+  year: 2222
+#+END_SRC
+
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/d/info.yaml" :mkdirp yes
+  tags: classics
+  year: 2000
+#+END_SRC
+
+
+
+** papisr functions
 :PROPERTIES:
 :ID:       org:1nneg0902hj0
 :END:
 
+*** collect_papis_records
 #+name: 
 #+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
   ##' Collects papis records
@@ -46,86 +299,61 @@
       }
   }
 
+#+END_SRC
+#+BEGIN_SRC R :tangle inst/tinytest/test_collect_papis_records.r
+  expect_equal(
+    system.file("testdata", "papis", package = "papisr") |>
+    collect_papis_records("data" %in% info$tags)
+  , list(list(path = "inst/testdata/papis/a", info = list(tags = c("data", "research"), url = "example.com", year = 2022L)), list(path = "inst/testdata/papis/c", info = list(tags = "data", year = 2222L))))
+#+END_SRC
 
+*** tabulate_papis_records
 
+#+name: 
+#+BEGIN_SRC R :tangle "R/papisr.r" :mkdirp yes
 
-
-  ## tests
-  collect_papis_records(
-      dir = "~/org/data"
-    , "name_standardization" %in% info$tags)
-
-  collect_papis_records(
-      dir = "~/org/data"
-    , info$metacodes$url == "https://www.researchoninnovation.org/epodata/")[[1]]$path
-
-
-  collect_papis_records(
-      dir = system.file("testdata", "papis", package = "papisr")
-    , info$metacodes$url == "https://www.researchoninnovation.org/epodata/")[[1]]$path
-
-  collect_papis_records(
-      dir = "inst/testdata/papis"
-    , "data" %in% info$tags)
-
-
-
-
-
-
-  tabulate_papis_records <- function(papis_records, ...) {
-      message("HI")
-      env <- environment()
-      papis_records |>
-          sapply(\(papis_record) {
-              col_values <-
-                  sapply(1:...length(), \(n) {
-                      parse(paste0("..", n)) |>
-                          substitute(env) |>
-                          deparse()
-                  })
-                          ## eval(envir = papis_record)
-              ## if(length(col_val) > 1) stop("tabulate_papis_records -- col value should be length of 1")
-              return(col_values)
-                  })
-      ## names(col_values) <- names(col_formulas)
+  tabulate_papis_records <- function(papis_records
+                                   , ...
+                                   , use_path_as_row_names = FALSE) {
+      fun_call <- sys.call()
+      col_names <- ...names()
+      papis_table <- 
+          papis_records |>
+          lapply(\(papis_record) {
+              lapply(col_names
+                   , \(col_name) {
+                       col_val <- 
+                           fun_call[[col_name]] |>
+                           eval(papis_record)
+                       col_val_len <- length(col_val)
+                       if(col_val_len == 1) {
+                           return(col_val)
+                       } else if(col_val_len == 0) {
+                           return(NA)
+                       } else {
+                           stop("tabulate_papis_records -- the calculated values should have length of 1 or 0 (NA). Here col_val = '", paste(col_val, collapse = ", "), "' has length of ", col_val_len)
+                       }
+                   })
+          })
+      if(use_path_as_row_names) {
+          row_names <- sapply(papis_records, `[[`, "path")
+      } else {
+          row_names <- NULL
+      }
+      do.call(rbind, papis_table) |>
+      `dimnames<-`(list(row_names, col_names))
   }
 
-
-  collect_papis_records("inst/testdata/papis") |>
-      tabulate_papis_records(year = info$year
-                           , url = info$url)
 #+END_SRC
 
 
-
-* papis test data
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes
-  tags:
-    - data
-    - research
-  url: example.com
-  year: 2022
+#+BEGIN_SRC R :tangle inst/tinytest/test_tabulate_papis_records.r
+  expect_equal(system.file("testdata", "papis", package = "papis") |>
+               collect_papis_records() |>
+               tabulate_papis_records(year = info$year
+                                    , url = info$url
+                                    , tag = length(info$tags)
+                                    , use_path_as_row_names = TRUE)
+             , structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(c("inst/testdata/papis/a", "inst/testdata/papis/b", "inst/testdata/papis/c", "inst/testdata/papis/d"), c("year", "url", "tag"))))
 #+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/b/info.yml" :mkdirp yes
-  tags:
-    - research
-    - phd
-  url: uvt.nl
-  year: 1985
-#+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/c/INFO.YML" :mkdirp yes
-  tags: data
-  year: 2222
-#+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/d/info.yaml" :mkdirp yes
-  tags: classics
-  year: 2000
-#+END_SRC
-
-
 
