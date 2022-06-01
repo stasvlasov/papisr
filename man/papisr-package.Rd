@@ -6,11 +6,12 @@
 \alias{papisr-package}
 \title{papisr: Bundle of convenience functions for papis workflows in R.}
 \description{
-Provides some convenience functions for [https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
+Provides some convenience functions for [papis](https://github.com/papis/papis) workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 }
 \details{
 Bundle of convenience functions for papis workflows in R.
-Provides some convenience functions for \link[=papis]{https://github.com/papis/papis} workflows in R. Papis is '\link{p}owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require \code{papis} to be installed in order for its functions to work.
+
+Provides some convenience functions for \href{https://github.com/papis/papis}{papis} workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require \code{papis} to be installed in order for its functions to work.
 }
 \seealso{
 Useful links:
@@ -24,4 +25,3 @@ Useful links:
 \strong{Maintainer}: Stanislav Vlasov \email{s.vlasov@uvt.nl}
 
 }
-\keyword{internal}

@@ -5,8 +5,8 @@ Date: 2022-06-01
 Authors@R: 
     person("Stanislav", "Vlasov", , "s.vlasov@uvt.nl", role = c("aut", "cre"))
 Description: Provides some convenience functions for
-    [https://github.com/papis/papis][papis] workflows in R. Papis is
-    '[p]owerful and highly extensible command-line based document and
+    [papis](https://github.com/papis/papis) workflows in R. Papis is a
+    'powerful and highly extensible command-line based document and
     bibliography manager'. The package does not actually require `papis`
     to be installed in order for its functions to work.
 License: MIT + file LICENSE

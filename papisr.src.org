@@ -25,7 +25,7 @@
 
 #+name: package-description
 #+begin_src markdown :exports none
-  Provides some convenience functions for [https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
+  Provides some convenience functions for [papis](https://github.com/papis/papis) workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_src
 
 #+name: readme-header
@@ -39,7 +39,7 @@
 #+begin_EXPORT markdown
 Bundle of convenience functions for papis workflows in R.
 
-Provides some convenience functions for [https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
+Provides some convenience functions for [papis](https://github.com/papis/papis) workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_EXPORT
 
 * deploy
@@ -248,7 +248,9 @@ vignettes/*.pdf
 #+BEGIN_SRC R :tangle R/papisr.r :noweb yes
   #' @details
   #' <<package-title>>
+  #' 
   #' <<package-description>>
+  #' @md
   "_PACKAGE"
 #+END_SRC
 
