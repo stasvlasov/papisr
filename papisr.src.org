@@ -5,6 +5,12 @@
 :export_options+: author:nil
 :export_options+: title:nil
 :END:
+
+#+name: package-name
+#+begin_export markdown
+# papisr
+#+end_export
+
 #+name: md-badges
 #+begin_export markdown
 [![R-CMD-check](https://github.com/stasvlasov/papisr/workflows/R-CMD-check/badge.svg)](https://github.com/stasvlasov/papisr/actions)
@@ -19,13 +25,13 @@
 
 #+name: package-description
 #+begin_src markdown :exports none
-  Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
+  Provides some convenience functions for [https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_src
 
 #+name: readme-header
 #+begin_src emacs-lisp :noweb yes :exports results :wrap EXPORT markdown :results value replace
   "<<package-title>>
-  
+
   <<package-description>>"
 #+end_src
 
@@ -33,9 +39,7 @@
 #+begin_EXPORT markdown
 Bundle of convenience functions for papis workflows in R.
 
-Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'.
-
-This package does not require actually require `papis` to be installed in order for its functions to work.
+Provides some convenience functions for [https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_EXPORT
 
 * deploy
@@ -49,6 +53,7 @@ This package does not require actually require `papis` to be installed in order 
                    "tangle-buffer"
                    "description-and-license"
                    "roxygenize"
+                   "setup-tinytest"
                    ))
           ;; turn off babel prompts
           org-confirm-babel-evaluate)
@@ -66,29 +71,33 @@ This package does not require actually require `papis` to be installed in order 
 #+BEGIN_SRC R :tangle no
   ## Remove tangled and generated files
   ## --------------------------------------------------------------------------------
-  files_to_remove <- c(
-      "DESCRIPTION"
-    , "NAMESPACE"
-    , "LICENSE.md"
-    , "README.md"
-  )
-
   dirs_to_remove <-c(
       "man"
     , "inst"
+    , "tests"
     , "data"
     , "R"
   )
 
-  ## remove files in dirs recursively
-  sapply(dirs_to_remove
-       , function(dir) {
-           file.remove(list.files(dir , recursive = TRUE, full.names = TRUE))
-       })
+  files_to_remove <- c(
+      "DESCRIPTION"
+    , "NAMESPACE"
+    , "LICENSE.md"
+    , "LICENSE"
+    , "README.md"
+    , ".gitignore"
+    , ".Rbuildignore"
+  )
 
-  ## remove files and empty dirs
-  sapply(c(files_to_remove, dirs_to_remove)
-       , \(file) if(file.exists(file)) file.remove(file))
+  dirs_to_remove |>
+      lapply(list.files
+           , recursive = TRUE
+           , full.names = TRUE
+           , include.dirs = TRUE) |>
+      unlist() |>
+      rev() |>
+      c(dirs_to_remove, files_to_remove) |>
+      sapply(\(file) if(file.exists(file)) file.remove(file))
 #+END_SRC
 
 ** tangle sources
@@ -98,7 +107,7 @@ This package does not require actually require `papis` to be installed in order 
 #+END_SRC
 ** tinytest setup
 #+name: setup-tinytest
-#+BEGIN_SRC R
+#+BEGIN_SRC R :session
   tinytest::setup_tinytest(".")
 #+END_SRC
 
@@ -117,6 +126,46 @@ https://github.com/r-lib/actions/blob/v1/examples/README.md
 #+BEGIN_SRC Gitignore :tangle ".gitignore"
 *.project.org
 .DS_Store
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.Renviron
 #+END_SRC
 
 ** .Rbuildignore
