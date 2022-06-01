@@ -249,7 +249,6 @@ vignettes/*.pdf
   #' @details
   #' <<package-title>>
   #' <<package-description>>
-  #' @keywords internal
   "_PACKAGE"
 #+END_SRC
 
@@ -353,11 +352,15 @@ vignettes/*.pdf
   }
 
 #+END_SRC
+
 #+BEGIN_SRC R :tangle inst/tinytest/test_collect_papis_records.r
   expect_equal(
     system.file("testdata", "papis", package = "papisr") |>
     collect_papis_records("data" %in% info$tags)
-  , list(list(path = "inst/testdata/papis/a", info = list(tags = c("data", "research"), url = "example.com", year = 2022L)), list(path = "inst/testdata/papis/c", info = list(tags = "data", year = 2222L))))
+  , list(list(path = "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/papisr/testdata/papis/a", 
+      info = list(tags = c("data", "research"), url = "example.com", 
+          year = 2022L)), list(path = "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/papisr/testdata/papis/c", 
+      info = list(tags = "data", year = 2222L))))
 #+END_SRC
 
 ** tabulate_papis_records
@@ -413,7 +416,9 @@ vignettes/*.pdf
                tabulate_papis_records(year = info$year
                                     , url = info$url
                                     , tag = length(info$tags)
-                                    , use_path_as_row_names = TRUE)
-             , structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(c("inst/testdata/papis/a", "inst/testdata/papis/b", "inst/testdata/papis/c", "inst/testdata/papis/d"), c("year", "url", "tag"))))
+                                    , use_path_as_row_names = FALSE)
+  , structure(list(2022L, 1985L, 2222L, 2000L, "example.com", "uvt.nl", 
+      NA, NA, 2L, 2L, 1L, 1L), .Dim = 4:3, .Dimnames = list(NULL, 
+      c("year", "url", "tag"))))
 #+END_SRC
 
