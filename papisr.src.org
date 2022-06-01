@@ -7,9 +7,9 @@
 :END:
 #+name: md-badges
 #+begin_export markdown
-[![R-CMD-check](https://github.com/stasvlasov/get_dots/workflows/R-CMD-check/badge.svg)](https://github.com/stasvlasov/get_dots/actions)
+[![R-CMD-check](https://github.com/stasvlasov/papisr/workflows/R-CMD-check/badge.svg)](https://github.com/stasvlasov/papisr/actions)
 [![codecov](https://codecov.io/gh/stasvlasov/dots/branch/master/graph/badge.svg?token=ACDBEL2JY5)](https://codecov.io/gh/stasvlasov/dots)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stasvlasov/dots)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stasvlasov/papisr)
 #+end_export
 
 #+name: package-title
@@ -19,9 +19,7 @@
 
 #+name: package-description
 #+begin_src markdown :exports none
-  Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'.
-
-  This package does not require actually require `papis` to be installed in order for its functions to work.
+  Provides some convenience functions for [[https://github.com/papis/papis][papis] workflows in R. Papis is '[p]owerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_src
 
 #+name: readme-header
@@ -45,25 +43,25 @@ This package does not require actually require `papis` to be installed in order 
 #+begin_src emacs-lisp
   (save-excursion
     (let ((calls '(
-                    "readme-header"
-                    "tangle-readme"
-                    "description-and-license"
-                    "roxygenize"
-                    ))
-           ;; turn off babel prompts
-           org-confirm-babel-evaluate)
-      ;; tangle all blocks
-      (org-babel-tangle)
+                   "reset-working-directory"
+                   "readme-header"
+                   "tangle-readme"
+                   "tangle-buffer"
+                   "description-and-license"
+                   "roxygenize"
+                   ))
+          ;; turn off babel prompts
+          org-confirm-babel-evaluate)
       (mapcar
        (lambda (name)
-         (let (org-confirm-babel-evaluate)
-           (save-excursion
-             (org-babel-goto-named-src-block name)
-             (call-interactively 'org-babel-execute-maybe))))
+         (save-excursion
+           (org-babel-goto-named-src-block name)
+           (or (org-babel-execute-src-block-maybe)
+               (org-babel-lob-execute-maybe))))
        calls)))
 #+end_src
 
-** Reset working directory
+** reset working directory
 #+name: reset-working-directory
 #+BEGIN_SRC R :tangle no
   ## Remove tangled and generated files
@@ -93,16 +91,21 @@ This package does not require actually require `papis` to be installed in order 
        , \(file) if(file.exists(file)) file.remove(file))
 #+END_SRC
 
-** tinytest
+** tangle sources
+#+name: tangle-buffer
+#+BEGIN_SRC emacs-lisp :results none
+  (org-babel-tangle)
+#+END_SRC
+** tinytest setup
 #+name: setup-tinytest
 #+BEGIN_SRC R
   tinytest::setup_tinytest(".")
 #+END_SRC
 
-** github workflows and badges
+** github workflows and badges setup
 https://github.com/r-lib/actions/blob/v1/examples/README.md
 #+name: setup-github-actions
-#+BEGIN_SRC R
+#+BEGIN_SRC R :session
   usethis::use_github_action("check-release")
   usethis::use_github_action("test-coverage")
   usethis::use_github_action("pkgdown")
@@ -163,29 +166,29 @@ https://github.com/r-lib/actions/blob/v1/examples/README.md
   packageVersion(pkg)
 #+END_SRC
 
-
 #+name: description-and-license
 #+header: :var suggest_packages = suggest-packages
 #+header: :var dependencies = dependencies
-#+BEGIN_SRC R :noweb yes
+#+BEGIN_SRC R :noweb yes :session
+  ## set description
   suppressWarnings(file.remove("DESCRIPTION"))
-  usethis::use_description(fields = list(
-                               Title  = "<<package-title>>"
-                             , Description = "<<package-description>>"
-                             , Date = Sys.Date()
-                             , "Authors@R" = 'as.person("Stanislav Vlasov <s.vlasov@uvt.nl> [aut, cre]")'
-                             , Version = "0.0.0.9000"
-                             , URL = "https://stasvlasov.github.io/papisr/"
-                             , BugReports = "https://github.com/stasvlasov/papisr/issues"
-                             , Suggests = paste(suggest_packages$names, collapse = ", ")
-                             , Depends = paste(
-                                   paste0(dependencies$packages, " (>= ", dependencies$ensure_version, ")")
-                                 , collapse = ", ")))
-
+  list(Title  = "<<package-title>>"
+     , Description = "<<package-description>>"
+     , Date = Sys.Date()
+     , `Authors@R` = 'as.person("Stanislav Vlasov <s.vlasov@uvt.nl> [aut, cre]")'
+     , Version = "0.0.0.9000"
+     , URL = "https://stasvlasov.github.io/papisr/"
+     , BugReports = "https://github.com/stasvlasov/papisr/issues"
+     , Suggests = paste(suggest_packages$names, collapse = ", ")
+     , Depends = paste(
+           paste0(dependencies$packages, " (>= ", dependencies$ensure_version, ")")
+         , collapse = ", ")) |>
+      usethis::use_description()
+  ## Set license
   suppressWarnings(file.remove("LICENSE", "LICENSE.md"))
-  ## usethis::use_mit_license()
+  usethis::use_mit_license()
   ## usethis::use_lgpl_license()
-  usethis::use_apache_license()  
+  ## usethis::use_apache_license()  
 #+END_SRC
 
 ** Documentation

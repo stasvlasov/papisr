@@ -1,0 +1,23 @@
+Package: papisr
+Title: Bundle of convenience functions for papis workflows in R.
+Version: 0.0.0.9000
+Date: 2022-06-01
+Authors@R: 
+    person("Stanislav", "Vlasov", , "s.vlasov@uvt.nl", role = c("aut", "cre"))
+Description: Provides some convenience functions for
+    [[https://github.com/papis/papis][papis] workflows in R. Papis is
+    '[p]owerful and highly extensible command-line based document and
+    bibliography manager'. The package does not actually require `papis`
+    to be installed in order for its functions to work.
+License: MIT + file LICENSE
+URL: https://stasvlasov.github.io/papisr/
+BugReports: https://github.com/stasvlasov/papisr/issues
+Depends: 
+    R (>= 4.0),
+    yaml (>= 2.3.0)
+Suggests: 
+    checkmate,
+    tinytest
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
