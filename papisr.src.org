@@ -6,10 +6,7 @@
 :export_options+: title:nil
 :END:
 
-#+name: package-name
-#+begin_export markdown
-# papisr
-#+end_export
+** papisr
 
 #+name: md-badges
 #+begin_export markdown
@@ -41,6 +38,72 @@ Bundle of convenience functions for papis workflows in R.
 
 Provides some convenience functions for [papis](https://github.com/papis/papis) workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 #+end_EXPORT
+
+*** Installation
+#+BEGIN_SRC R
+  ## Installs and loads papisr
+  devtools::install_github("stasvlasov/papisr")
+  library("papisr")
+#+END_SRC
+
+*** Usage
+Suppose you have a papis library located in ~testdata/papis~ that includes 4 simple bibliographic records (see [[Test records in papis format][below]] for the content of files). This example papis library is provided with the package and accessible with ~system.file()~
+
+Now, for example, if you want to tabulate ~year~ and ~url~ fields and number of ~tags~ for each record that is not tagged as 'classics' you can do it with the following simple script:
+
+#+name: papisr-example
+#+BEGIN_SRC R :results replace :colnames yes
+  system.file("testdata", "papis", package = "papisr") |>
+      papisr::collect_papis_records(!("classics" %in% info$tags)) |>
+      papisr::tabulate_papis_records(`Year` = info$year
+                                   , `URL` = info$url
+                                   , `No. of tags` = length(info$tags))
+#+END_SRC
+
+The script returns the following data.frame
+
+#+RESULTS: papisr-example
+| Year | URL         | No. of tags |
+|------+-------------+-------------|
+| 2022 | example.com |           2 |
+| 1985 | uvt.nl      |           2 |
+| 2222 |             |           1 |
+
+Here 3 out of 4 records were tabulated because the one records with ~tag~ "classics" was filterd out.
+
+*** Test records in papis format
+
+~testdata/papis/a/info.yml~
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes
+  tags:
+    - data
+    - research
+  url: example.com
+  year: 2022
+#+END_SRC
+
+~testdata/papis/b/info.yml~
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/b/info.yml" :mkdirp yes
+  tags:
+    - research
+    - phd
+  url: uvt.nl
+  year: 1985
+#+END_SRC
+
+~testdata/papis/c/INFO.YML~
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/c/INFO.YML" :mkdirp yes
+  tags: data
+  year: 2222
+#+END_SRC
+
+~testdata/papis/d/info.yaml~
+#+BEGIN_SRC yaml :tangle "inst/testdata/papis/d/info.yaml" :mkdirp yes
+  tags: classics
+  year: 2000
+#+END_SRC
+
+
 
 * deploy
 #+name: deploy
@@ -186,8 +249,9 @@ vignettes/*.pdf
   (require 'org-goto)
   (save-excursion
     (org-goto--local-search-headings "frontpage" nil t)
-    ;; (org-pandoc-export-to-markdown nil 'subtreep)
-    (org-md-export-to-markdown nil 'subtreep))
+    (org-pandoc-export-to-markdown nil 'subtreep)
+    ;; (org-md-export-to-markdown nil 'subtreep)
+    )
 #+end_src
 
 ** Description and License
@@ -272,36 +336,6 @@ vignettes/*.pdf
   ## --------------------------------------------------------------------------------
   devtools::install(".")
 #+END_SRC
-
-
-* papis test records
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes
-  tags:
-    - data
-    - research
-  url: example.com
-  year: 2022
-#+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/b/info.yml" :mkdirp yes
-  tags:
-    - research
-    - phd
-  url: uvt.nl
-  year: 1985
-#+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/c/INFO.YML" :mkdirp yes
-  tags: data
-  year: 2222
-#+END_SRC
-
-#+BEGIN_SRC yaml :tangle "inst/testdata/papis/d/info.yaml" :mkdirp yes
-  tags: classics
-  year: 2000
-#+END_SRC
-
 
 
 * papisr functions
