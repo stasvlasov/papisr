@@ -1,7 +1,7 @@
 # papisr
 
 [![R-CMD-check](https://github.com/stasvlasov/papisr/workflows/R-CMD-check/badge.svg)](https://github.com/stasvlasov/papisr/actions)
-[![codecov](https://codecov.io/gh/stasvlasov/dots/branch/master/graph/badge.svg?token=ACDBEL2JY5)](https://codecov.io/gh/stasvlasov/dots)
+[![codecov](https://codecov.io/gh/stasvlasov/papisr/branch/master/graph/badge.svg?token=1HD07SWHSH)](https://codecov.io/gh/stasvlasov/papisr)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stasvlasov/papisr)
 
 Bundle of convenience functions for papis workflows in R.
