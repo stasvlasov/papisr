@@ -47,11 +47,11 @@ Provides some convenience functions for [papis](https://github.com/papis/papis) 
 #+END_SRC
 
 *** Usage
-Suppose you have a papis library located in ~testdata/papis~ that includes 4 simple bibliographic records (see [[Test records in papis format][below]] for the content of files). This example papis library is provided with the package and accessible with ~system.file()~
+Suppose you have a papis library located in ~testdata/papis~ that includes 4 simple bibliographic records (see below for the content of files). This example papis library is provided with the package and accessible with ~system.file()~
 
 Now, for example, if you want to tabulate ~year~ and ~url~ fields and number of ~tags~ for each record that is not tagged as 'classics' you can do it with the following simple script:
 
-#+name: papisr-example
+
 #+BEGIN_SRC R :results replace :colnames yes
   system.file("testdata", "papis", package = "papisr") |>
       papisr::collect_papis_records(!("classics" %in% info$tags)) |>
@@ -60,18 +60,21 @@ Now, for example, if you want to tabulate ~year~ and ~url~ fields and number of 
                                    , `No. of tags` = length(info$tags))
 #+END_SRC
 
-The script returns the following data.frame
+The script returns the following data.frame:
 
-#+RESULTS: papisr-example
+#+RESULTS:
 | Year | URL         | No. of tags |
 |------+-------------+-------------|
 | 2022 | example.com |           2 |
 | 1985 | uvt.nl      |           2 |
 | 2222 |             |           1 |
 
-Here 3 out of 4 records were tabulated because the one records with ~tag~ "classics" was filterd out.
+Here 3 out of 4 records were tabulated because the one records with ~tag~ "classics" was filtered out.
 
 *** Test records in papis format
+:PROPERTIES:
+:ID:       org:rsdio3a15hj0
+:END:
 
 ~testdata/papis/a/info.yml~
 #+BEGIN_SRC yaml :tangle "inst/testdata/papis/a/info.yml" :mkdirp yes

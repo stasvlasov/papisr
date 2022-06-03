@@ -19,16 +19,15 @@ library("papisr")
 ## Usage
 
 Suppose you have a papis library located in `testdata/papis` that
-includes 4 simple bibliographic records (see
-[1.3](#Test records in papis format) for the content of files). This
-example papis library is provided with the package and accessible with
-`system.file()`
+includes 4 simple bibliographic records (see below for the content of
+files). This example papis library is provided with the package and
+accessible with `system.file()`
 
 Now, for example, if you want to tabulate `year` and `url` fields and
 number of `tags` for each record that is not tagged as \'classics\' you
 can do it with the following simple script:
 
-``` {#papisr-example .r org-language="R"}
+``` {.r org-language="R"}
 system.file("testdata", "papis", package = "papisr") |>
     papisr::collect_papis_records(!("classics" %in% info$tags)) |>
     papisr::tabulate_papis_records(`Year` = info$year
@@ -36,10 +35,16 @@ system.file("testdata", "papis", package = "papisr") |>
                                  , `No. of tags` = length(info$tags))
 ```
 
-The script returns the following data.frame
+The script returns the following data.frame:
+
+  Year   URL           No. of tags
+  ------ ------------- -------------
+  2022   example.com   2
+  1985   uvt.nl        2
+  2222                 1
 
 Here 3 out of 4 records were tabulated because the one records with
-`tag` \"classics\" was filterd out.
+`tag` \"classics\" was filtered out.
 
 ## Test records in papis format
 
