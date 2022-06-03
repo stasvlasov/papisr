@@ -62,7 +62,6 @@ Now, for example, if you want to tabulate ~year~ and ~url~ fields and number of 
 
 The script returns the following data.frame:
 
-#+RESULTS:
 | Year | URL         | No. of tags |
 |------+-------------+-------------|
 | 2022 | example.com |           2 |
@@ -252,8 +251,8 @@ vignettes/*.pdf
   (require 'org-goto)
   (save-excursion
     (org-goto--local-search-headings "frontpage" nil t)
-    (org-pandoc-export-to-markdown nil 'subtreep)
-    ;; (org-md-export-to-markdown nil 'subtreep)
+    ;; (org-pandoc-export-to-markdown nil 'subtreep)
+    (org-md-export-to-markdown nil 'subtreep)
     )
 #+end_src
 
