@@ -5,7 +5,6 @@
 :export_options+: author:nil
 :export_options+: title:nil
 :END:
-
 ** papisr
 
 #+name: md-badges
@@ -422,7 +421,7 @@ vignettes/*.pdf
                    , \(col_name) {
                        col_val <- 
                            fun_call[[col_name]] |>
-                           eval(papis_record)
+                           eval(papis_record, enclos = parent.frame(4))
                        if(length(col_val) == 0) {
                            return(NA)
                        } else if(is.list(col_val) || length(col_val) > 1) {
@@ -469,5 +468,66 @@ vignettes/*.pdf
                    "classics")), row.names = c(NA, -6L), class = "data.frame"))
 
 
+  ## test eval environment
+  test_function_length_plus <- function(x) length(x) + 1
+
+  expect_equal(
+      system.file("testdata", "papis", package = "papisr") |>
+               collect_papis_records() |>
+               tabulate_papis_records(year = info$year
+                                    , url = info$url
+                                    , tag = test_function_length_plus(info$tags))
+  , structure(list(year = c(2022L, 1985L, 2222L, 2000L), url = c("example.com", 
+  "uvt.nl", NA, NA), tag = c(3, 3, 2, 2)), row.names = c(NA, -4L
+  ), class = "data.frame"))
+
+
+
+
+
+#+END_SRC
+
+** validate_with_json_schema
+:PROPERTIES:
+:ID:       org:5kg22zt0hij0
+:END:
+
+#+BEGIN_SRC R :tangle R/papisr.r :mkdirp yes
+  validate_with_json_schema <- function(yml_file = "eee-ppat/info.yml"
+                     , json_shema = "test-schema.json"
+                       ## , yq_path = "."
+                     , yq_path = '.data_description') {
+      if(all(dependencies <- Sys.which(c('yq', 'ajv')) != "")) {
+          tmp_json_file_name <-
+              "tmp.json"
+          ## tempfile("papis-info-yml-data", fileext = c(".json"))
+          file.create(tmp_json_file_name)
+          tmp_json_file <- file(tmp_json_file_name)
+          ## do things here
+          yq_cmd <- paste0(
+              "yq --output-format=json '", yq_path, "' ", shQuote(yml_file)
+          )
+          system(yq_cmd, intern = TRUE) |>
+              writeLines(tmp_json_file)
+          ajv_cmd <- paste0(
+              "ajv test",
+              " -s ", shQuote(json_shema)
+            , " -d ", shQuote(tmp_json_file_name)
+            , " --all-errors"
+            , " --valid"
+            , " --messages=false"
+          )
+          ajv_out <- 
+              system(ajv_cmd
+                   , intern = TRUE
+                   , ignore.stderr = TRUE, invisible = TRUE)
+          close(tmp_json_file)
+          ## file.remove(tmp_json_file_name)
+      } else {
+          stop("The following dependencies are not available on your system: "
+             , paste(names(dependencies[!dependencies]), collapse = ", "))
+      }
+      return(ajv_out)
+  }
 #+END_SRC
 

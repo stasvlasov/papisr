@@ -64,7 +64,7 @@ tabulate_papis_records <- function(papis_records, ...) {
                  , \(col_name) {
                      col_val <- 
                          fun_call[[col_name]] |>
-                         eval(papis_record)
+                         eval(papis_record, enclos = parent.frame(4))
                      if(length(col_val) == 0) {
                          return(NA)
                      } else if(is.list(col_val) || length(col_val) > 1) {
@@ -82,4 +82,41 @@ tabulate_papis_records <- function(papis_records, ...) {
                             , check.names = FALSE)
         })
     do.call(rbind, papis_table)
+}
+
+validate_with_json_schema <- function(yml_file = "eee-ppat/info.yml"
+                   , json_shema = "test-schema.json"
+                     ## , yq_path = "."
+                   , yq_path = '.data_description') {
+    if(all(dependencies <- Sys.which(c('yq', 'ajv')) != "")) {
+        tmp_json_file_name <-
+            "tmp.json"
+        ## tempfile("papis-info-yml-data", fileext = c(".json"))
+        file.create(tmp_json_file_name)
+        tmp_json_file <- file(tmp_json_file_name)
+        ## do things here
+        yq_cmd <- paste0(
+            "yq --output-format=json '", yq_path, "' ", shQuote(yml_file)
+        )
+        system(yq_cmd, intern = TRUE) |>
+            writeLines(tmp_json_file)
+        ajv_cmd <- paste0(
+            "ajv test",
+            " -s ", shQuote(json_shema)
+          , " -d ", shQuote(tmp_json_file_name)
+          , " --all-errors"
+          , " --valid"
+          , " --messages=false"
+        )
+        ajv_out <- 
+            system(ajv_cmd
+                 , intern = TRUE
+                 , ignore.stderr = TRUE, invisible = TRUE)
+        close(tmp_json_file)
+        ## file.remove(tmp_json_file_name)
+    } else {
+        stop("The following dependencies are not available on your system: "
+           , paste(names(dependencies[!dependencies]), collapse = ", "))
+    }
+    return(ajv_out)
 }
