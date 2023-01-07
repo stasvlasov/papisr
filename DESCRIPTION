@@ -1,29 +1,18 @@
 Package: papisr
-Title: Bundle of convenience functions for papis workflows in R.
+Title: papisr - R workflow for tabulating papis records
 Version: 0.0.0.9000
-Date: 2022-09-29
+Date: 2023-01-07
 Authors@R: 
-    person("Stanislav", "Vlasov", , "s.vlasov@uvt.nl", role = c("aut", "cre"))
+    person("Stas", "Vlasov", , "s.vlasov@uvt.nl", role = c("aut", "cre"))
 Description: Provides some convenience functions for
     [papis](https://github.com/papis/papis) workflows in R. Papis is a
     'powerful and highly extensible command-line based document and
     bibliography manager'. The package does not actually require `papis`
     to be installed in order for its functions to work.
 License: MIT + file LICENSE
-URL: https://stasvlasov.github.io/papisr/
+URL: https://github.com/stasvlasov/papisr
 BugReports: https://github.com/stasvlasov/papisr/issues
-Depends: 
-    R (>= 4.0),
-    yaml (>= 2.3.0)
-Suggests: 
-    checkmate,
-    tinytest
 Encoding: UTF-8
-References: Alejandro Gallo, Nicolò Balzarotti, Michael Plews, Alex Fikl,
-    Jackson Woodruff, Matthieu Coudron, Alexander Von Moll, gouderm,
-    Sébastien M. Popoff, Henrik Grimler, JP-Ellis, Katrin Leinweber,
-    Manuel Haussmann, Andrew Ramsey, Andrey Akinshin, CosmosAtlas,
-    dbruggner, hayk, Henning Timm, … prataffel. (2022). papis/papis:
-    VERSION 0.12 (v0.12). Zenodo. https://doi.org/10.5281/zenodo.6573964
+References: nil
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

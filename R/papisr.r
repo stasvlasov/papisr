@@ -16,6 +16,8 @@
 ##' @md 
 ##' @export 
 collect_papis_records <- function(dir, filter_info) {
+    env <- parent.frame()
+    sys_call <- sys.call()
     papis_info_yml_files <- 
         list.files(dir
                  , pattern = "^info\\.y[a]?ml$"
@@ -28,16 +30,13 @@ collect_papis_records <- function(dir, filter_info) {
                list(path = dirname(info_yml_file)
                   , info = yaml::read_yaml(info_yml_file)))
     ## filter info.yml files based on some filter criteria
-    if(!missing(filter_info)) {
-        ## save this env because substitute does not enherit from parents
-        ## and can not find `filter_info` when called from sapply func env
-        env <- environment()
+    if(length(sys_call) == 3) {
+        filter_info <- sys_call[[3]]
         papis_records_filter <-
             papis_records |>
             sapply(\(papis_record) {
-                substitute(filter_info, env)  |>
-                    ## bind papis_record to eval env
-                    eval(envir = papis_record) |>
+                filter_info |>
+                    eval(papis_record, env) |>
                     isTRUE()
             })
         return(papis_records[papis_records_filter])
@@ -49,28 +48,44 @@ collect_papis_records <- function(dir, filter_info) {
 ##' Tablulate papis records
 ##' 
 ##' @param papis_records List of papis records as returned by `collect_papis_records()`
-##' @param ... Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - `path` and `info` (see `collect_papis_records()` for details)
+##' @param ... Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - `path` and `info` (see `collect_papis_records()` for details. The evaluation environment is enclosed in parent frame (aka `tabulate_papis_records` calling environment)
+##' 
+##' @param .omit_all_na_rows Whether to remove rows with all NAs.
+##' @param .bind_dot_n_and_dot_dot Whethet to bind two extra variables to the evaluation environment for columns. Namely `.n` (current row/record's number) and `..` as the entire `papis_records` input.
 ##' @return Data frame. If some of the column values have length > 1 then the table will be filled with these values.
 ##' 
 ##' @md 
 ##' @export 
-tabulate_papis_records <- function(papis_records, ...) {
+tabulate_papis_records <- function(papis_records, ...
+                                 , .omit_all_na_rows = TRUE
+                                 , .bind_dot_n_and_dot_dot = TRUE) {
     fun_call <- sys.call()
     col_names <- ...names()
-    papis_table <- 
-        papis_records |>
+    env <- parent.frame()
+    papis_table <-
+        ifelse(.bind_dot_n_and_dot_dot
+             , mapply(
+                   \(papis_record, n) {
+                       c(papis_record, .n = n, .. = papis_records)
+                   }
+                 , papis_records
+                 , seq_along(papis_records)
+                 , SIMPLIFY = FALSE)
+             , papis_records) |>
         lapply(\(papis_record) {
             lapply(col_names
                  , \(col_name) {
                      col_val <- 
                          fun_call[[col_name]] |>
-                         eval(papis_record, enclos = parent.frame(4))
+                         eval(papis_record, enclos = env)
                      if(length(col_val) == 0) {
                          return(NA)
                      } else if(is.list(col_val) || length(col_val) > 1) {
                          col_val <- 
                              col_val |>
-                             lapply(\(col_val_el) if(length(col_val_el) == 0) NA else col_val_el) |>
+                             lapply(\(col_val_el) {
+                                 if(length(col_val_el) == 0) NA else col_val_el
+                             }) |>
                              unlist()
                          return(col_val)
                      } else {
@@ -81,7 +96,11 @@ tabulate_papis_records <- function(papis_records, ...) {
                 as.data.frame(stringsAsFactors = FALSE
                             , check.names = FALSE)
         })
-    do.call(rbind, papis_table)
+    papis_table <- do.call(rbind, papis_table)
+    if(.omit_all_na_rows) {
+        papis_table <- papis_table[rowSums(is.na(papis_table)) != ncol(papis_table), ]
+    }
+    return(papis_table)
 }
 
 validate_with_json_schema <- function(yml_file = "eee-ppat/info.yml"

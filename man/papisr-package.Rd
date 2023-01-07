@@ -4,7 +4,7 @@
 \name{papisr-package}
 \alias{papisr}
 \alias{papisr-package}
-\title{papisr: Bundle of convenience functions for papis workflows in R.}
+\title{papisr: papisr - R workflow for tabulating papis records}
 \description{
 Provides some convenience functions for [papis](https://github.com/papis/papis) workflows in R. Papis is a 'powerful and highly extensible command-line based document and bibliography manager'. The package does not actually require `papis` to be installed in order for its functions to work.
 }
@@ -16,12 +16,12 @@ Provides some convenience functions for \href{https://github.com/papis/papis}{pa
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://stasvlasov.github.io/papisr/}
+  \item \url{https://github.com/stasvlasov/papisr}
   \item Report bugs at \url{https://github.com/stasvlasov/papisr/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Stanislav Vlasov \email{s.vlasov@uvt.nl}
+\strong{Maintainer}: Stas Vlasov \email{s.vlasov@uvt.nl}
 
 }

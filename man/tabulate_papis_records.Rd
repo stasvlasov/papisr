@@ -4,12 +4,21 @@
 \alias{tabulate_papis_records}
 \title{Tablulate papis records}
 \usage{
-tabulate_papis_records(papis_records, ...)
+tabulate_papis_records(
+  papis_records,
+  ...,
+  .omit_all_na_rows = TRUE,
+  .bind_dot_n_and_dot_dot = TRUE
+)
 }
 \arguments{
 \item{papis_records}{List of papis records as returned by \code{collect_papis_records()}}
 
-\item{...}{Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - \code{path} and \code{info} (see \code{collect_papis_records()} for details)}
+\item{...}{Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - \code{path} and \code{info} (see \code{collect_papis_records()} for details. The evaluation environment is enclosed in parent frame (aka \code{tabulate_papis_records} calling environment)}
+
+\item{.omit_all_na_rows}{Whether to remove rows with all NAs.}
+
+\item{.bind_dot_n_and_dot_dot}{Whethet to bind two extra variables to the evaluation environment for columns. Namely \code{.n} (current row/record's number) and \code{..} as the entire \code{papis_records} input.}
 }
 \value{
 Data frame. If some of the column values have length > 1 then the table will be filled with these values.
