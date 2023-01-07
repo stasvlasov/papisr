@@ -7,7 +7,7 @@
 collect_papis_records(dir, filter_info)
 }
 \arguments{
-\item{dir}{Directory to scan recursevely for papis records}
+\item{dir}{A character vector of directories to scan recursevely for papis records.}
 
 \item{filter_info}{Exprocion that allows to filter info.yml files that is evaluated in the environment with two variables bound for each record - 'path' (root dir of papis record) and 'info' (content of info.yml). The expression should return TRUE in order for record to be filtered in. Other returned value will filter the record out. Example: \code{'data' \%in\% info$tags} will filter only records that have tag 'data' in their info.yml descriptions}
 }

@@ -357,7 +357,7 @@ vignettes/*.pdf
   ##'
   ##' The collection is done by (1) looking for all subdirectories with info.yml file that defines papis record, (2) filtering those records and (3) returning lists of 'path' (root dir of papis record) and 'info' (content of info.yml) for each record
   ##' 
-  ##' @param dir Directory to scan recursevely for papis records
+  ##' @param dir A character vector of directories to scan recursevely for papis records. 
   ##' @param filter_info Exprocion that allows to filter info.yml files that is evaluated in the environment with two variables bound for each record - 'path' (root dir of papis record) and 'info' (content of info.yml). The expression should return TRUE in order for record to be filtered in. Other returned value will filter the record out. Example: `'data' %in% info$tags` will filter only records that have tag 'data' in their info.yml descriptions
   ##' @return list of 'path' (root dir of papis record) and 'info' (content of info.yml) for each record
   ##' 
@@ -393,6 +393,7 @@ vignettes/*.pdf
       }
   }
 
+
 #+END_SRC
 
 #+BEGIN_SRC R :tangle inst/tinytest/test_collect_papis_records.r
@@ -425,17 +426,18 @@ vignettes/*.pdf
       fun_call <- sys.call()
       col_names <- ...names()
       env <- parent.frame()
+      if(.bind_dot_n_and_dot_dot) {
+          papis_records <- 
+              mapply(
+                  \(papis_record, n) {
+                      c(papis_record, list(.n = n, .. = papis_records))
+                  }
+                , papis_records
+                , seq_along(papis_records)
+                , SIMPLIFY = FALSE)
+      }
       papis_table <-
-          ifelse(.bind_dot_n_and_dot_dot
-               , mapply(
-                     \(papis_record, n) {
-                         c(papis_record, .n = n, .. = papis_records)
-                     }
-                   , papis_records
-                   , seq_along(papis_records)
-                   , SIMPLIFY = FALSE)
-               , papis_records) |>
-          lapply(\(papis_record) {
+          lapply(papis_records, \(papis_record) {
               lapply(col_names
                    , \(col_name) {
                        col_val <- 
