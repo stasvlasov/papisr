@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bundle of convenience functions for papis workflows in R. • papisr</title>
+<title>papisr - R workflow for tabulating papis records • papisr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Bundle of convenience functions for papis workflows in R.">
+<script src="pkgdown.js"></script><meta property="og:title" content="papisr - R workflow for tabulating papis records">
 <meta property="og:description" content="Provides some convenience functions for
     [papis](https://github.com/papis/papis) workflows in R. Papis is a
     powerful and highly extensible command-line based document and
@@ -69,7 +69,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="papisr">papisr<a class="anchor" aria-label="anchor" href="#papisr"></a>
 </h1></div>
-
+<p><a href="https://github.com/stasvlasov/papisr/actions" class="external-link"><img src="https://github.com/stasvlasov/papisr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://codecov.io/gh/stasvlasov/papisr" class="external-link"><img src="https://codecov.io/gh/stasvlasov/papisr/branch/master/graph/badge.svg?token=1HD07SWHSH" alt="codecov"></a> <img src="https://img.shields.io/github/languages/code-size/stasvlasov/papisr" alt="GitHub code size in bytes"></p>
 <p>Bundle of convenience functions for papis workflows in R.</p>
 <p>Provides some convenience functions for <a href="https://github.com/papis/papis" class="external-link">papis</a> workflows in R. Papis is a ‘powerful and highly extensible command-line based document and bibliography manager’. The package does not actually require <code>papis</code> to be installed in order for its functions to work.</p>
 <div class="section level2">
@@ -84,8 +84,8 @@
 </h2>
 <p>Suppose you have a papis library located in <code>testdata/papis</code> that includes 4 simple bibliographic records (see below for the content of files). This example papis library is provided with the package and accessible with <code><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file()</a></code></p>
 <p>Now, for example, if you want to tabulate <code>year</code> and <code>url</code> fields and number of <code>tags</code> for each record that is not tagged as ‘classics’ you can do it with the following simple script:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.file</span>(<span class="st">"testdata"</span>, <span class="st">"papis"</span>, <span class="at">package =</span> <span class="st">"papisr"</span>) <span class="sc">|</span><span class="er">&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    papisr<span class="sc">::</span><span class="fu">collect_papis_records</span>(<span class="sc">!</span>(<span class="st">"classics"</span> <span class="sc">%in%</span> info<span class="sc">$</span>tags)) <span class="sc">|</span><span class="er">&gt;</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.file</span>(<span class="st">"testdata"</span>, <span class="st">"papis"</span>, <span class="at">package =</span> <span class="st">"papisr"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    papisr<span class="sc">::</span><span class="fu">collect_papis_records</span>(<span class="sc">!</span>(<span class="st">"classics"</span> <span class="sc">%in%</span> info<span class="sc">$</span>tags)) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    papisr<span class="sc">::</span><span class="fu">tabulate_papis_records</span>(<span class="st">`</span><span class="at">Year</span><span class="st">`</span> <span class="ot">=</span> info<span class="sc">$</span>year</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                 , <span class="st">`</span><span class="at">URL</span><span class="st">`</span> <span class="ot">=</span> info<span class="sc">$</span>url</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                                 , <span class="st">`</span><span class="at">No. of tags</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">length</span>(info<span class="sc">$</span>tags))</span></code></pre></div>
@@ -97,25 +97,49 @@
 <col class="org-right">
 </colgroup>
 <thead><tr>
-<th scope="col" class="org-right">Year</th>
-<th scope="col" class="org-left">URL</th>
-<th scope="col" class="org-right">No. of tags</th>
+<th scope="col" class="org-right">
+Year
+</th>
+<th scope="col" class="org-left">
+URL
+</th>
+<th scope="col" class="org-right">
+No. of tags
+</th>
 </tr></thead>
 <tbody>
 <tr>
-<td class="org-right">2022</td>
-<td class="org-left">example.com</td>
-<td class="org-right">2</td>
+<td class="org-right">
+2022
+</td>
+<td class="org-left">
+example.com
+</td>
+<td class="org-right">
+2
+</td>
 </tr>
 <tr>
-<td class="org-right">1985</td>
-<td class="org-left">uvt.nl</td>
-<td class="org-right">2</td>
+<td class="org-right">
+1985
+</td>
+<td class="org-left">
+uvt.nl
+</td>
+<td class="org-right">
+2
+</td>
 </tr>
 <tr>
-<td class="org-right">2222</td>
-<td class="org-left"> </td>
-<td class="org-right">1</td>
+<td class="org-right">
+2222
+</td>
+<td class="org-left">
+ 
+</td>
+<td class="org-right">
+1
+</td>
 </tr>
 </tbody>
 </table>
@@ -174,17 +198,11 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Stanislav Vlasov <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Stas Vlasov <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/stasvlasov/papisr/actions" class="external-link"><img src="https://github.com/stasvlasov/papisr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/stasvlasov/papisr" class="external-link"><img src="https://codecov.io/gh/stasvlasov/papisr/branch/master/graph/badge.svg?token=1HD07SWHSH" alt="codecov"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>
@@ -192,12 +210,12 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Stanislav Vlasov.</p>
+<p>Developed by Stas Vlasov.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

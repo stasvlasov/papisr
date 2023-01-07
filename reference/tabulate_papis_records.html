@@ -50,7 +50,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tabulate_papis_records</span><span class="op">(</span><span class="va">papis_records</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tabulate_papis_records</span><span class="op">(</span></span>
+<span>  <span class="va">papis_records</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .omit_all_na_rows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  .bind_dot_n_and_dot_dot <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -60,7 +65,15 @@
 
 
 <dt>...</dt>
-<dd><p>Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - <code>path</code> and <code>info</code> (see <code><a href="collect_papis_records.html">collect_papis_records()</a></code> for details)</p></dd>
+<dd><p>Colums specification as named expressions that are evaluated in papis record environment where two variables are bound - <code>path</code> and <code>info</code> (see <code><a href="collect_papis_records.html">collect_papis_records()</a></code> for details. The evaluation environment is enclosed in parent frame (aka <code>tabulate_papis_records</code> calling environment)</p></dd>
+
+
+<dt>.omit_all_na_rows</dt>
+<dd><p>Whether to remove rows with all NAs.</p></dd>
+
+
+<dt>.bind_dot_n_and_dot_dot</dt>
+<dd><p>Whethet to bind two extra variables to the evaluation environment for columns. Namely <code>.n</code> (current row/record's number) and <code>..</code> as the entire <code>papis_records</code> input.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -78,11 +91,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Stanislav Vlasov.</p>
+  <p></p><p>Developed by Stas Vlasov.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
